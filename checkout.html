@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout</title>
+
+<style>
+
+*{
+    box-sizing: border-box;
+}
+
+body{
+    background-color: aliceblue;
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.page-wrapper{
+    width: 100%;
+    min-height: 100vh;
+    background-color: white;
+    border: 8px solid green;
+    border-radius: 100px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* HEADER */
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    background-color: ghostwhite;
+}
+
+.logo{
+    display: flex;
+    align-items: center;
+}
+
+.logo img{
+    width: 80px;
+    margin-right: 10px;
+}
+
+.navigation a{
+    color: green;
+    text-decoration: none;
+    margin-left: 20px;
+    padding: 5px 10px;
+}
+
+.navigation a:hover{
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+}
+
+.content{
+    padding: 20px;
+    text-align: center;
+}
+
+input{
+    padding: 8px;
+    margin: 10px;
+    width: 60%;
+}
+
+img{
+    width: 50px;
+    vertical-align: middle;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+<header>
+    <div class="logo">
+        <img src="images/main.png">
+        <h1>Anna Supermarket</h1>
+    </div>
+
+    <nav class="navigation">
+        <a href="index.html">Home</a>
+        <a href="index.html">Products</a>
+        <a href="#">Founder's Desk</a>
+        <a href="#">Contact Us</a>
+    </nav>
+</header>
+
+<div class="content">
+
+<h2>Checkout Details</h2>
+
+<form id="form">
+    <input type="text" id="name" placeholder="Name"><br>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="text" id="phone" placeholder="Phone"><br>
+    <br>
+    <button type="submit">Place Order</button>
+</form>
+
+<h2>Order Summary</h2>
+<div id="bill"></div>
+
+</div>
+
+<script>
+function loadBill() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    let total = 0;
+    let output = "";
+
+    if(cart.length === 0){
+        output = "<p>Cart is empty</p>";
+    } else {
+        cart.forEach(item => {
+            let itemTotal = item.price * item.qty;
+            total += itemTotal;
+
+            output += `
+            <p>
+                <img src="${item.image}">
+                ${item.name} (x${item.qty}) - ₹${itemTotal}
+            </p>`;
+        });
+
+        output += `<h3>Total: ₹${total}</h3>`;
+    }
+
+    document.getElementById("bill").innerHTML = output;
+}
+
+document.getElementById("form").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let phone = document.getElementById("phone").value;
+
+    if(!name || !email || !phone){
+        alert("Please fill all fields!");
+        return;
+    }
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if(cart.length === 0){
+        alert("Cart is empty!");
+        return;
+    }
+
+    alert("Order placed successfully!");
+
+    document.getElementById("bill").innerHTML =
+        "<p>Order placed. Cart is now empty.</p>";
+
+    document.getElementById("form").reset();
+});
+
+window.onload = loadBill;
+</script>
+
+</div>
+</body>
+</html>
